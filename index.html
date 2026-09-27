@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Judo Training</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <nav id="modeNav" class="mode-nav" aria-label="Trainingsmodus">
+      <button data-mode="timed" class="nav-button active">Würfe auf Zeit</button>
+      <button data-mode="highscore" class="nav-button">Würfe Highscore</button>
+      <button data-mode="situations" class="nav-button">Würfe in Situationen</button>
+      <button data-mode="situationHighscore" class="nav-button">Situationen Highscore</button>
+    </nav>
+    <button id="themeToggle" class="theme-button" aria-label="Darstellung wechseln">☾</button>
+  </header>
+
+  <main id="app"></main>
+
+  <script src="throws.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

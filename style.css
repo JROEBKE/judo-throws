@@ -1,0 +1,367 @@
+:root {
+  --bg: #111;
+  --surface: #202020;
+  --surface-2: #2d2d2d;
+  --surface-3: #3a3a3a;
+  --text: #fff;
+  --muted: #bdbdbd;
+  --border: #555;
+  --danger: #555;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+body { min-height: 100vh; }
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+  padding: 10px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.mode-nav {
+  display: flex;
+  flex: 1;
+  gap: 6px;
+  overflow-x: auto;
+}
+
+button {
+  font: inherit;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  min-height: 48px;
+  padding: 10px 16px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+button:hover { background: var(--surface-3); }
+button:active { transform: translateY(1px); }
+
+.nav-button {
+  flex: 1 0 auto;
+  white-space: nowrap;
+}
+
+.nav-button.active {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+
+.theme-button {
+  width: 50px;
+  flex: 0 0 50px;
+  padding: 0;
+}
+
+main {
+  width: min(1100px, 100%);
+  min-height: calc(100vh - 70px);
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.mode-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  margin: 0 0 24px;
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+}
+
+.settings {
+  display: grid;
+  gap: 14px;
+}
+
+.setting {
+  display: grid;
+  grid-template-columns: minmax(130px, 1fr) minmax(240px, 2fr);
+  gap: 14px;
+  align-items: center;
+}
+
+.setting-label {
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+.setting-control {
+  display: grid;
+  grid-template-columns: 52px 1fr 52px;
+  gap: 6px;
+  align-items: center;
+}
+
+.setting-control.two {
+  grid-template-columns: 1fr 1fr;
+}
+
+.setting-value {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.choice-button.selected {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.action-area {
+  margin-top: auto;
+  padding-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.go-button, .stop-button, .reset-button {
+  width: min(520px, 100%);
+  min-height: 110px;
+  font-size: clamp(2rem, 8vw, 4rem);
+  font-weight: bold;
+}
+
+.stop-button { background: var(--surface-3); }
+
+.training-screen {
+  min-height: calc(100vh - 120px);
+  display: flex;
+  flex-direction: column;
+}
+
+.score {
+  align-self: flex-end;
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.throw-display {
+  flex: 1;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.throw-name {
+  font-size: clamp(3rem, 11vw, 8rem);
+  line-height: 1;
+  font-weight: 800;
+  text-transform: none;
+}
+
+.throw-name.change {
+  animation: throwChange 0.32s ease-out;
+}
+
+.countdown {
+  margin-top: 28px;
+  font-size: clamp(2.5rem, 9vw, 5rem);
+  font-variant-numeric: tabular-nums;
+}
+
+.hint {
+  margin-top: 8px;
+  color: var(--muted);
+}
+
+.bottom-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding-top: 20px;
+}
+
+.bottom-actions.three {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.large-action {
+  min-height: 90px;
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  font-weight: bold;
+}
+
+.situation-title {
+  margin-bottom: 24px;
+  text-align: center;
+  font-size: clamp(1.6rem, 5vw, 3rem);
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.throw-grid {
+  width: min(100%, 900px);
+  margin: 0 auto;
+  display: grid;
+  gap: 12px;
+  flex: 1;
+  align-content: center;
+}
+
+.throw-grid.count-2,
+.throw-grid.count-3 { grid-template-columns: 1fr; }
+
+.throw-grid.count-4 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.throw-grid.count-5 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.throw-card {
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 18px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  font-size: clamp(1.8rem, 6vw, 4rem);
+  font-weight: bold;
+  animation: cardIn 0.28s ease-out;
+}
+
+.throw-grid.count-3 .throw-card {
+  min-height: 125px;
+}
+
+.result {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.result-label {
+  color: var(--muted);
+  font-size: clamp(1.5rem, 5vw, 3rem);
+}
+
+.result-score {
+  font-size: clamp(6rem, 25vw, 14rem);
+  font-weight: 900;
+  line-height: 1;
+}
+
+@keyframes throwChange {
+  0% { opacity: 0; transform: scale(0.85); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes cardIn {
+  0% { opacity: 0; transform: scale(0.92); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@media (max-width: 700px) {
+  .topbar {
+    flex-wrap: wrap;
+  }
+
+  .mode-nav {
+    order: 1;
+    width: 100%;
+  }
+
+  .theme-button {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+  }
+
+  .mode-nav {
+    padding-right: 56px;
+  }
+
+  main { padding: 16px; }
+
+  .setting {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .setting-label {
+    font-size: 0.95rem;
+  }
+
+  .throw-grid.count-5 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .throw-grid.count-5 .throw-card:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .bottom-actions,
+  .bottom-actions.three {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 701px) {
+  .throw-grid.count-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+
+.status-bar {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 4px 0;
+}
+
+.status-bar .score {
+  justify-self: start;
+  margin: 0;
+}
+
+.status-bar .countdown {
+  justify-self: end;
+  margin: 0;
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  font-variant-numeric: tabular-nums;
+}
