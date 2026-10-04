@@ -239,6 +239,10 @@ h1 {
   min-width: 0;
 }
 
+.bottom-actions.three {
+  width: min(100%, 900px);
+}
+
 .large-action {
   min-height: 90px;
   font-size: clamp(1.5rem, 5vw, 2.5rem);
