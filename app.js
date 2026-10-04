@@ -328,9 +328,9 @@ function renderHighscoreTraining() {
         <div class="countdown">${formatTime(s.remaining)}</div>
       </div>
       <div class="bottom-actions three">
-        <button class="large-action" data-action="next">Next</button>
-        <button class="large-action" data-action="skip">Skip</button>
         <button class="large-action stop-button" data-action="stop">Stop</button>
+        <button class="large-action" data-action="skip">Skip</button>
+        <button class="large-action" data-action="next">Next</button>        
       </div>
     </section>`;
   showThrow(s.sequence[s.index]);
@@ -498,9 +498,9 @@ function renderSituationHighscoreTraining() {
         ${throws.map(name => `<div class="throw-card">${name}</div>`).join("")}
       </div>
       <div class="bottom-actions three">
-        <button class="large-action" data-action="next">Next</button>
+        <button class="large-action stop-button" data-action="stop">Stop</button>        
         <button class="large-action" data-action="skip">Skip</button>
-        <button class="large-action stop-button" data-action="stop">Stop</button>
+        <button class="large-action" data-action="next">Next</button>
       </div>
     </section>`;
   startSituationHighscoreTimer();
