@@ -37,6 +37,10 @@ body {
   border-bottom: 1px solid var(--border);
 }
 
+.topbar.mode-nav-hidden {
+  display: none;
+}
+
 .mode-nav {
   display: flex;
   flex: 1;
@@ -158,7 +162,22 @@ h1 {
   font-weight: bold;
 }
 
-.stop-button { background: var(--surface-3); }
+.go-button,
+.large-action[data-action="next"] {
+  color: #4caf50;
+  border-color: #4caf50;
+}
+
+.large-action[data-action="skip"] {
+  color: #ffeb3b;
+  border-color: #ffeb3b;
+}
+
+.stop-button {
+  color: #f44336;
+  border-color: #f44336;
+  background: var(--surface-3);
+}
 
 .training-screen {
   flex: 1;
@@ -206,14 +225,10 @@ h1 {
 }
 
 .bottom-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  justify-content: center;
   gap: 12px;
   padding-top: 20px;
-}
-
-.bottom-actions.three {
-  grid-template-columns: repeat(3, 1fr);
 }
 
 .large-action {
@@ -339,9 +354,7 @@ h1 {
     grid-column: 1 / -1;
   }
 
-  .bottom-actions,
-  .bottom-actions.three {
-    grid-template-columns: 1fr;
+  .bottom-actions {
     position: sticky;
     bottom: 0;
     padding-bottom: max(12px, env(safe-area-inset-bottom));

@@ -1,4 +1,5 @@
 const app = document.getElementById("app");
+const topbar = document.querySelector(".topbar");
 const navButtons = [...document.querySelectorAll(".nav-button")];
 const themeToggle = document.getElementById("themeToggle");
 
@@ -197,6 +198,7 @@ function settingsScreen(title, settingsHtml) {
 }
 
 function renderModeSettings() {
+  topbar.classList.remove("mode-nav-hidden");
   stopTimer();
 
   if (currentMode === "timed") {
@@ -580,6 +582,7 @@ function adjust(field, amount) {
 
 function handleAction(action, value) {
   if (action === "go") {
+    topbar.classList.add("mode-nav-hidden");
     if (currentMode === "timed") startTimed();
     if (currentMode === "highscore") startHighscore();
     if (currentMode === "situations") startSituations();
