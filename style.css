@@ -183,6 +183,9 @@ h1 {
   flex: 1;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .score {
@@ -229,6 +232,11 @@ h1 {
   justify-content: center;
   gap: 12px;
   padding-top: 20px;
+}
+
+.bottom-actions.three .large-action {
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 .large-action {

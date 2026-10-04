@@ -659,6 +659,21 @@ app.addEventListener("click", (event) => {
   }
 });
 
+document.addEventListener("keydown", (event) => {
+  if (event.repeat || event.altKey || event.ctrlKey || event.metaKey || event.isComposing) return;
+  if (event.target instanceof Element && event.target.closest("input, textarea, select, [contenteditable='true']")) return;
+
+  const actions = { d: "go", a: "stop", s: "skip" };
+  const action = actions[event.key.toLowerCase()];
+  if (!action) return;
+
+  const button = app.querySelector(`button[data-action="${action}"]`);
+  if (!button) return;
+
+  event.preventDefault();
+  button.click();
+});
+
 navButtons.forEach(button => {
   button.addEventListener("click", () => {
     currentMode = button.dataset.mode;
