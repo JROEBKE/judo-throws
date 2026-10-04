@@ -234,6 +234,15 @@ h1 {
   padding-top: 20px;
 }
 
+.bottom-actions:not(.three) {
+  width: min(520px, 100%);
+}
+
+.bottom-actions:not(.three) .stop-button {
+  min-height: 110px;
+  font-size: clamp(2rem, 8vw, 4rem);
+}
+
 .bottom-actions.three .large-action {
   flex: 1 1 0;
   min-width: 0;
