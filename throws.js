@@ -6,7 +6,7 @@
 const THROW_DATA = {
   groups: {
     basic: {
-      name: "Kyu",
+      name: "Beginner",
       throws: [
         "(Morote-)Seoi-nage",        
         "O-goshi",
@@ -40,7 +40,7 @@ const THROW_DATA = {
     },
 
     extension: {
-      name: "1.DAN",
+      name: "Advanced",
       throws: [
         "(Morote-)Seoi-nage",        
         "O-goshi",
@@ -89,7 +89,7 @@ const THROW_DATA = {
     },
 
     all: {
-      name: "All Kodokan throws",
+      name: "Master",
       throws: [
         "Seoi-nage",
         "Ippon-seoi-nage",
