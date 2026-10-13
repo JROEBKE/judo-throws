@@ -13,19 +13,16 @@
       this.pressed = false;
 
       this.button.addEventListener("click", () => this.connect());
-      this.button.disabled = !navigator.bluetooth;
+      this.button.disabled = false;
       this.button.textContent = "Taster verbinden";
       this.setSelectionVisible(true);
-      if (this.button.disabled) {
-        this.setStatus("error", "Web Bluetooth ist in diesem Browser nicht verfügbar.");
-      }
     }
 
     setStatus(state, errorMessage = "") {
       const connected = state === "connected";
       this.button.classList.toggle("connected", connected);
       this.button.textContent = connected ? "Taster verbunden" : "Taster verbinden";
-      this.button.disabled = state === "connecting" || state === "connected" || !navigator.bluetooth;
+      this.button.disabled = state === "connecting";
       this.button.title = errorMessage;
     }
 
@@ -34,17 +31,24 @@
     }
 
     async connect() {
-      if (this.connecting || !navigator.bluetooth) return;
+      if (this.connecting) return;
 
       this.connecting = true;
       this.setStatus("connecting", "Verbindung wird hergestellt …");
 
       try {
+        if (!navigator.bluetooth) {
+          throw new Error("Web Bluetooth ist in diesem Browser nicht verfügbar.");
+        }
+
         const device = await navigator.bluetooth.requestDevice({
           acceptAllDevices: true,
           optionalServices: [SERVICE_UUID]
         });
 
+        if (this.device && this.device !== device) {
+          this.device.gatt?.disconnect();
+        }
         this.device?.removeEventListener("gattserverdisconnected", this.handleDisconnect);
         this.characteristic?.removeEventListener("characteristicvaluechanged", this.handleNotification);
         this.device = device;
