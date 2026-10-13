@@ -43,7 +43,7 @@
 
       try {
         const device = await navigator.bluetooth.requestDevice({
-          filters: [{ name: "Judo" }],
+          acceptAllDevices: true,
           optionalServices: [SERVICE_UUID]
         });
 

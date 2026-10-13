@@ -6,7 +6,6 @@ Judo Throws is a lightweight browser-based training tool that helps judoka pract
 
 ## Bluetooth button
 
-On Android, open the app in Chrome over HTTPS and tap **Bluetooth-Taster verbinden**. Select the BLE device named **Judo** in the browser's device picker. The button sends the same start/stop action as the current training mode's on-screen control. If the connection is interrupted, tap **Erneut verbinden** to pair again.
-
+On Android, open the app in Chrome over HTTPS and tap **Bluetooth-Taster verbinden**. Select the BLE device **Judo** in the browser's device picker. The picker searches all devices because the buzzer does not include its name in the advertising data. The app then accesses the configured service UUID. The button sends the same start/stop action as the current training mode's on-screen control. If the connection is interrupted, tap **Erneut verbinden** to pair again.
 
 
