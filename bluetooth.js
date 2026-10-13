@@ -3,9 +3,8 @@
   const CHARACTERISTIC_UUID = "8b7e1001-1234-4567-890a-bcdef0123456";
 
   class JudoBluetoothController {
-    constructor({ button, status, container, onPressed }) {
+    constructor({ button, container, onPressed }) {
       this.button = button;
-      this.status = status;
       this.container = container;
       this.onPressed = onPressed;
       this.device = null;
@@ -22,17 +21,12 @@
       }
     }
 
-    setStatus(state, message) {
-      this.status.dataset.state = state;
-      this.status.textContent = message;
-      this.button.hidden = state === "connected";
+    setStatus(state, errorMessage = "") {
+      const connected = state === "connected";
+      this.button.classList.toggle("connected", connected);
+      this.button.textContent = connected ? "Taster verbunden" : "Taster verbinden";
       this.button.disabled = state === "connecting" || state === "connected" || !navigator.bluetooth;
-
-      if (state === "connecting") {
-        this.button.textContent = "Taster verbinden";
-      } else if (state === "connected") {
-        this.button.textContent = "Taster verbinden";
-      }
+      this.button.title = errorMessage;
     }
 
     setSelectionVisible(visible) {
@@ -75,7 +69,9 @@
         if (this.device?.gatt?.connected) this.device.gatt.disconnect();
         this.device = null;
         this.characteristic = null;
-        this.setStatus("error", `Verbindungsfehler: ${error.message || "Unbekannter Fehler"}`);
+        const message = `Verbindungsfehler: ${error.message || "Unbekannter Fehler"}`;
+        console.error(message, error);
+        this.setStatus("error", message);
       } finally {
         this.connecting = false;
       }

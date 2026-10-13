@@ -187,10 +187,9 @@ function renderSettings({
   return html;
 }
 
-function settingsScreen(title, settingsHtml) {
+function settingsScreen(settingsHtml) {
   app.innerHTML = `
     <section class="mode-screen">
-      <h1>${title}</h1>
       ${settingsHtml}
       <div class="action-area">
         <button class="go-button" data-action="go">Go</button>
@@ -205,21 +204,21 @@ function renderModeSettings() {
 
   if (currentMode === "timed") {
     const s = state.timed;
-    settingsScreen("Würfe auf Zeit", renderSettings({
+    settingsScreen(renderSettings({
       interval: s.interval, group: s.group, round: s.round
     }));
   }
 
   if (currentMode === "highscore") {
     const s = state.highscore;
-    settingsScreen("Würfe Highscore", renderSettings({
+    settingsScreen(renderSettings({
       totalTime: s.totalTime, group: s.group
     }));
   }
 
   if (currentMode === "situations") {
     const s = state.situations;
-    settingsScreen("Würfe in Situationen", renderSettings({
+    settingsScreen(renderSettings({
       interval: s.interval, group: s.group, round: s.round,
       count: s.count, situation: s.situation
     }));
@@ -227,7 +226,7 @@ function renderModeSettings() {
 
   if (currentMode === "situationHighscore") {
     const s = state.situationHighscore;
-    settingsScreen("Situationen Highscore", renderSettings({
+    settingsScreen(renderSettings({
       totalTime: s.totalTime, group: s.group,
       count: s.count, situation: s.situation
     }));
@@ -727,7 +726,6 @@ themeToggle.addEventListener("click", () => {
 
 bluetoothController = new window.JudoBluetoothController({
   button: document.getElementById("bluetoothConnect"),
-  status: document.getElementById("bluetoothStatus"),
   container: document.getElementById("bluetoothControls"),
   onPressed: toggleTraining
 });

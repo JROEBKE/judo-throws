@@ -99,37 +99,25 @@ main {
   gap: 12px;
 }
 
-.bluetooth-controls[hidden],
-.bluetooth-controls button[hidden] {
+.bluetooth-controls[hidden] {
   display: none;
 }
 
-.bluetooth-controls button {
+.bluetooth-connect-button {
   min-height: 40px;
   padding: 8px 12px;
+  color: #f44336;
+  border-color: #f44336;
 }
 
-.bluetooth-controls button:disabled {
+.bluetooth-connect-button.connected {
+  color: #4caf50;
+  border-color: #4caf50;
+}
+
+.bluetooth-connect-button:disabled {
   cursor: default;
   opacity: 0.7;
-}
-
-.bluetooth-status {
-  color: var(--muted);
-  font-size: 0.9rem;
-}
-
-.bluetooth-status[data-state="connected"] {
-  color: #4caf50;
-}
-
-.bluetooth-status[data-state="connecting"] {
-  color: #ffeb3b;
-}
-
-.bluetooth-status[data-state="interrupted"],
-.bluetooth-status[data-state="error"] {
-  color: #f44336;
 }
 
 .mode-screen {
