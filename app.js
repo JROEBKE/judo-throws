@@ -635,6 +635,10 @@ function handleAction(action, value) {
   }
 }
 
+function toggleTraining() {
+  handleAction(state[currentMode].running ? "stop" : "go");
+}
+
 document.addEventListener("pointerdown", () => {
   try {
     audioContext ||= new (window.AudioContext || window.webkitAudioContext)();
@@ -711,6 +715,12 @@ function applyTheme(theme) {
 themeToggle.addEventListener("click", () => {
   const current = localStorage.getItem("judo-theme") || "dark";
   applyTheme(current === "dark" ? "bright" : "dark");
+});
+
+new window.JudoBluetoothController({
+  button: document.getElementById("bluetoothConnect"),
+  status: document.getElementById("bluetoothStatus"),
+  onPressed: toggleTraining
 });
 
 applyTheme(localStorage.getItem("judo-theme") || "dark");

@@ -17,9 +17,16 @@
     <button id="themeToggle" class="theme-button" aria-label="Darstellung wechseln">☾</button>
   </header>
 
+  <section id="bluetoothControls" class="bluetooth-controls" aria-label="Bluetooth-Taster">
+    <button id="bluetoothConnect" type="button">Bluetooth-Taster verbinden</button>
+    <div id="bluetoothStatus" class="bluetooth-status" role="status" aria-live="polite" data-state="disconnected">
+      Nicht verbunden
+    </div>
+  </section>
   <main id="app"></main>
 
   <script src="throws.js"></script>
+  <script src="bluetooth.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

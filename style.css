@@ -90,6 +90,43 @@ main {
   flex-direction: column;
 }
 
+.bluetooth-controls {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  padding: 8px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bluetooth-controls button {
+  min-height: 40px;
+  padding: 8px 12px;
+}
+
+.bluetooth-controls button:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.bluetooth-status {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.bluetooth-status[data-state="connected"] {
+  color: #4caf50;
+}
+
+.bluetooth-status[data-state="connecting"] {
+  color: #ffeb3b;
+}
+
+.bluetooth-status[data-state="interrupted"],
+.bluetooth-status[data-state="error"] {
+  color: #f44336;
+}
+
 .mode-screen {
   flex: 1;
   display: flex;
@@ -357,6 +394,11 @@ h1 {
   }
 
   main { padding: 16px; }
+
+  .bluetooth-controls {
+    padding: 8px 16px;
+    flex-wrap: wrap;
+  }
 
   .setting {
     grid-template-columns: 1fr;
