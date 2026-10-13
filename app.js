@@ -641,13 +641,10 @@ function handleAction(action, value) {
 }
 
 function toggleTraining() {
-  if (!state[currentMode].running) {
-    handleAction("go");
-  } else if (currentMode === "highscore" || currentMode === "situationHighscore") {
-    handleAction("next");
-  } else {
-    handleAction("stop");
-  }
+  const action = ["go", "next", "stop"].find(name =>
+    app.querySelector(`button[data-action="${name}"]`)
+  );
+  if (action) handleAction(action);
 }
 
 document.addEventListener("pointerdown", () => {
