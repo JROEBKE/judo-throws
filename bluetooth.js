@@ -3,9 +3,10 @@
   const CHARACTERISTIC_UUID = "8b7e1001-1234-4567-890a-bcdef0123456";
 
   class JudoBluetoothController {
-    constructor({ button, status, onPressed }) {
+    constructor({ button, status, container, onPressed }) {
       this.button = button;
       this.status = status;
+      this.container = container;
       this.onPressed = onPressed;
       this.device = null;
       this.characteristic = null;
@@ -14,6 +15,8 @@
 
       this.button.addEventListener("click", () => this.connect());
       this.button.disabled = !navigator.bluetooth;
+      this.button.textContent = "Taster verbinden";
+      this.setSelectionVisible(true);
       if (this.button.disabled) {
         this.setStatus("error", "Web Bluetooth ist in diesem Browser nicht verfügbar.");
       }
@@ -22,17 +25,18 @@
     setStatus(state, message) {
       this.status.dataset.state = state;
       this.status.textContent = message;
+      this.button.hidden = state === "connected";
       this.button.disabled = state === "connecting" || state === "connected" || !navigator.bluetooth;
 
       if (state === "connecting") {
-        this.button.textContent = "Verbindung wird hergestellt …";
+        this.button.textContent = "Taster verbinden";
       } else if (state === "connected") {
-        this.button.textContent = "Bluetooth-Taster verbunden";
-      } else if (state === "interrupted") {
-        this.button.textContent = "Erneut verbinden";
-      } else {
-        this.button.textContent = "Bluetooth-Taster verbinden";
+        this.button.textContent = "Taster verbinden";
       }
+    }
+
+    setSelectionVisible(visible) {
+      this.container.hidden = !visible;
     }
 
     async connect() {
@@ -85,7 +89,7 @@
     };
 
     handleNotification = (event) => {
-      const message = new TextDecoder().decode(event.target.value).trim();
+      const message = new TextDecoder().decode(event.target.value).replace(/\0/g, "").trim();
 
       if (message === "RELEASED") {
         this.pressed = false;

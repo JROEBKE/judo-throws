@@ -99,6 +99,11 @@ main {
   gap: 12px;
 }
 
+.bluetooth-controls[hidden],
+.bluetooth-controls button[hidden] {
+  display: none;
+}
+
 .bluetooth-controls button {
   min-height: 40px;
   padding: 8px 12px;

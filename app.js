@@ -2,6 +2,7 @@ const app = document.getElementById("app");
 const topbar = document.querySelector(".topbar");
 const navButtons = [...document.querySelectorAll(".nav-button")];
 const themeToggle = document.getElementById("themeToggle");
+let bluetoothController = null;
 
 let currentMode = "timed";
 let timerId = null;
@@ -9,13 +10,13 @@ let audioContext = null;
 
 const state = {
   timed: {
-    interval: 30,
+    interval: 5,
     group: "basic",
     round: "single",
     running: false,
     sequence: [],
     index: 0,
-    remaining: 30
+    remaining: 5
   },
   highscore: {
     totalTime: 300,
@@ -118,9 +119,9 @@ function renderSettings({
       <div class="setting">
         <div class="setting-label">Zeitintervall</div>
         <div class="setting-control">
-          <button data-action="adjust" data-field="interval" data-value="-10">−10</button>
+          <button data-action="adjust" data-field="interval" data-value="-1">−1</button>
           <div class="setting-value">${interval} Sekunden</div>
-          <button data-action="adjust" data-field="interval" data-value="10">+10</button>
+          <button data-action="adjust" data-field="interval" data-value="1">+1</button>
         </div>
       </div>`;
   }
@@ -199,6 +200,7 @@ function settingsScreen(title, settingsHtml) {
 
 function renderModeSettings() {
   topbar.classList.remove("mode-nav-hidden");
+  bluetoothController?.setSelectionVisible(true);
   stopTimer();
 
   if (currentMode === "timed") {
@@ -375,6 +377,7 @@ function finishHighscore() {
   stopTimer();
   playTone("end");
   state.highscore.running = false;
+  bluetoothController?.setSelectionVisible(false);
   const score = state.highscore.score;
   app.innerHTML = `
     <section class="training-screen">
@@ -546,6 +549,7 @@ function finishSituationHighscore() {
   stopTimer();
   playTone("end");
   state.situationHighscore.running = false;
+  bluetoothController?.setSelectionVisible(false);
   const score = state.situationHighscore.score;
 
   app.innerHTML = `
@@ -570,7 +574,7 @@ function adjust(field, amount) {
   const s = state[currentMode];
 
   if (field === "interval") {
-    s.interval = Math.max(10, s.interval + amount);
+    s.interval = Math.max(1, s.interval + amount);
   }
 
   if (field === "totalTime") {
@@ -583,6 +587,7 @@ function adjust(field, amount) {
 function handleAction(action, value) {
   if (action === "go") {
     topbar.classList.add("mode-nav-hidden");
+    bluetoothController?.setSelectionVisible(false);
     if (currentMode === "timed") startTimed();
     if (currentMode === "highscore") startHighscore();
     if (currentMode === "situations") startSituations();
@@ -636,7 +641,13 @@ function handleAction(action, value) {
 }
 
 function toggleTraining() {
-  handleAction(state[currentMode].running ? "stop" : "go");
+  if (!state[currentMode].running) {
+    handleAction("go");
+  } else if (currentMode === "highscore" || currentMode === "situationHighscore") {
+    handleAction("next");
+  } else {
+    handleAction("stop");
+  }
 }
 
 document.addEventListener("pointerdown", () => {
@@ -717,9 +728,10 @@ themeToggle.addEventListener("click", () => {
   applyTheme(current === "dark" ? "bright" : "dark");
 });
 
-new window.JudoBluetoothController({
+bluetoothController = new window.JudoBluetoothController({
   button: document.getElementById("bluetoothConnect"),
   status: document.getElementById("bluetoothStatus"),
+  container: document.getElementById("bluetoothControls"),
   onPressed: toggleTraining
 });
 
