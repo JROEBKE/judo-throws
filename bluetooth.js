@@ -30,21 +30,33 @@
       this.container.hidden = !visible;
     }
 
-    async connect() {
+    connect() {
       if (this.connecting) return;
 
-      this.connecting = true;
-      this.setStatus("connecting", "Verbindung wird hergestellt …");
+      if (!navigator.bluetooth) {
+        this.showConnectionError(new Error("Web Bluetooth ist in diesem Browser nicht verfügbar."));
+        return;
+      }
 
+      let deviceRequest;
       try {
-        if (!navigator.bluetooth) {
-          throw new Error("Web Bluetooth ist in diesem Browser nicht verfügbar.");
-        }
-
-        const device = await navigator.bluetooth.requestDevice({
+        deviceRequest = navigator.bluetooth.requestDevice({
           acceptAllDevices: true,
           optionalServices: [SERVICE_UUID]
         });
+      } catch (error) {
+        this.showConnectionError(error);
+        return;
+      }
+
+      this.connecting = true;
+      this.setStatus("connecting", "Verbindung wird hergestellt …");
+      this.connectToDevice(deviceRequest);
+    }
+
+    async connectToDevice(deviceRequest) {
+      try {
+        const device = await deviceRequest;
 
         if (this.device && this.device !== device) {
           this.device.gatt?.disconnect();
@@ -73,11 +85,19 @@
         if (this.device?.gatt?.connected) this.device.gatt.disconnect();
         this.device = null;
         this.characteristic = null;
-        const message = `Verbindungsfehler: ${error.message || "Unbekannter Fehler"}`;
-        console.error(message, error);
-        this.setStatus("error", message);
+        this.showConnectionError(error);
       } finally {
         this.connecting = false;
+      }
+    }
+
+    showConnectionError(error) {
+      const message = `Bluetooth-Verbindung fehlgeschlagen: ${error.message || "Unbekannter Fehler"}`;
+      this.setStatus("error", message);
+
+      if (error.name !== "NotFoundError") {
+        console.error(message, error);
+        window.alert(message);
       }
     }
 
