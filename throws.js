@@ -5,8 +5,30 @@
 
 const THROW_DATA = {
   groups: {
-    basic: {
+    beginner: {
       name: "Beginner",
+      throws: [
+        "(Morote-)Seoi-nage",        
+        "O-goshi",
+        "Uki-goshi",
+        "O-uchi-gari",
+        "Ippon-seoi-nage",
+        "Koshi-guruma",
+        "Sode-tsurikomi-goshi",
+        "Ko-uchi-gari",
+        "Tai-otoshi",
+        "Tsurikomi-goshi",
+        "Sasae-tsurikomi-ashi",
+        "Ko-soto-gari (-gake)",
+        "Uchi-mata",
+        "Harai-goshi",
+        "O-soto-gari (-otoshi)",
+        "De-ashi-barai"
+      ]
+    },
+
+    advanced: {
+      name: "Advanced",
       throws: [
         "(Morote-)Seoi-nage",        
         "O-goshi",
@@ -39,8 +61,8 @@ const THROW_DATA = {
       ]
     },
 
-    extension: {
-      name: "Advanced",
+    expert: {
+      name: "Expert",
       throws: [
         "(Morote-)Seoi-nage",        
         "O-goshi",
@@ -88,7 +110,7 @@ const THROW_DATA = {
       ]
     },
 
-    all: {
+    master: {
       name: "Master",
       throws: [
         "Seoi-nage",

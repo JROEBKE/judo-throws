@@ -11,7 +11,7 @@ let audioContext = null;
 const state = {
   timed: {
     interval: 5,
-    group: "basic",
+    group: "beginner",
     round: "single",
     running: false,
     sequence: [],
@@ -20,7 +20,7 @@ const state = {
   },
   highscore: {
     totalTime: 300,
-    group: "basic",
+    group: "beginner",
     running: false,
     score: 0,
     sequence: [],
@@ -29,7 +29,7 @@ const state = {
   },
   situations: {
     interval: 60,
-    group: "basic",
+    group: "beginner",
     round: "single",
     count: 3,
     situation: true,
@@ -40,7 +40,7 @@ const state = {
   },
   situationHighscore: {
     totalTime: 600,
-    group: "basic",
+    group: "beginner",
     count: 3,
     situation: true,
     running: false,
