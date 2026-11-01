@@ -1,29 +1,108 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Judo Training</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111111">
+  <title>JUDO TRAINING & BUZZER</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
 </head>
 <body>
-  <header class="topbar">
-    <nav id="modeNav" class="mode-nav" aria-label="Trainingsmodus">
-      <button data-mode="timed" class="nav-button active">Würfe auf Zeit</button>
-      <button data-mode="highscore" class="nav-button">Würfe Highscore</button>
-      <button data-mode="situations" class="nav-button">Würfe in Situationen</button>
-      <button data-mode="situationHighscore" class="nav-button">Situationen Highscore</button>
-    </nav>
-    <section id="bluetoothControls" class="bluetooth-controls" aria-label="Bluetooth-Taster">
-      <button id="bluetoothConnect" class="bluetooth-connect-button" type="button">Taster verbinden</button>
-    </section>
-    <button id="themeToggle" class="theme-button" aria-label="Darstellung wechseln">☾</button>
-  </header>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">TRAINING APP<span> / JUDO THROWS</span></div>
+      <button id="themeToggle" class="theme-button" aria-label="Change view">☾</button>
+    </header>
 
-  <main id="app"></main>
+    <!-- SETUP VIEW -->
+    <section id="setupView" class="setup-view">
+      <div class="panel">
+        <h1>Trainings-Setup</h1>
+        
+        <label class="field-label" for="modeSelect">MODUS</label>
+        <select id="modeSelect" class="control">
+          <option value="timed">1 · Würfe auf Zeit</option>
+          <option value="highscore">2 · Würfe Highscore</option>
+          <option value="situations">3 · Würfe in Situationen</option>
+          <option value="situationHighscore">4 · Situationen Highscore</option>
+        </select>
+
+        <!-- DYNAMISCHE EINSTELLUNGEN JE NACH MODUS -->
+        <div id="dynamicSettings" class="settings-group">
+          <!-- Wird dynamisch über app.js befüllt (Intervall, Wurfgruppe, Runden, Count etc.) -->
+        </div>
+
+        <div class="button-row" style="margin-top: 24px;">
+          <button id="startButton" class="primary-button" data-action="go">GO</button>
+        </div>
+      </div>
+
+      <!-- BLUETOOTH PANEL (Original TimerApp-Struktur für 2 Buzzer) -->
+      <div class="panel">
+        <div class="panel-heading">
+          <h2>Bluetooth-Buzzer</h2>
+          <span id="bluetoothSupport" class="muted small">Checking Web Bluetooth …</span>
+        </div>
+        <p class="muted help-text">Buzzer 1 and 2 can be connected independently. The device selection will open via the respective button.</p>
+        
+        <div class="device-row">
+          <div><strong>BUZZER 1</strong><span id="device1Status" class="device-status">Not connected</span></div>
+          <div class="device-actions">
+            <button id="connect1" class="secondary-button">Connect</button>
+            <button id="disconnect1" class="secondary-button subtle" disabled>Disconnect</button>
+          </div>
+          <span id="device1Battery" class="device-battery muted small"></span>
+        </div>
+
+        <div class="device-row">
+          <div><strong>BUZZER 2</strong><span id="device2Status" class="device-status">Not connected</span></div>
+          <div class="device-actions">
+            <button id="connect2" class="secondary-button">Connect</button>
+            <button id="disconnect2" class="secondary-button subtle" disabled>Disconnect</button>
+          </div>
+          <span id="device2Battery" class="device-battery muted small"></span>
+        </div>
+        
+        <p id="bleMessage" class="muted small" role="status">No devices connected.</p>
+      </div>
+
+      <!-- SESSION / STATS PANEL -->
+      <div class="panel stats-panel">
+        <h2>Session</h2>
+        <div class="stats-grid">
+          <div><span class="muted">LAST</span><strong id="setupLast">—</strong></div>
+          <div><span class="muted">BEST</span><strong id="setupBest">—</strong></div>
+        </div>
+        <button id="clearSession" class="secondary-button subtle full-width">Reset Session Results</button>
+      </div>
+    </section>
+
+    <!-- TRAINING VIEW -->
+    <section id="trainingView" class="training-view hidden" aria-live="polite">
+      <div class="training-status" id="trainingStatus">READY</div>
+      <div class="hero-time" id="heroTime">00:00</div>
+      
+      <div id="secondaryReadout" class="secondary-readout"></div>
+      <div id="winnerReadout" class="winner-readout"></div>
+      
+      <!-- Hier greift die Anzeige für Würfe / Situationen -->
+      <div id="actionArea" class="action-area"></div>
+      
+      <div id="resultStats" class="result-stats"></div>
+      
+      <div class="button-row" style="margin-top: 20px;">
+        <button id="stopButton" class="secondary-button stop-button" data-action="stop">Stop</button>
+        <button id="resetButton" class="reset-button hidden">RESTART</button>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status"></div>
 
   <script src="throws.js"></script>
-  <script src="bluetooth.js?v=20261013-1429"></script>
-  <script src="app.js?v=20261013-1429"></script>
+  <script src="sounds.js"></script>
+  <script src="bluetooth.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
