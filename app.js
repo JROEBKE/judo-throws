@@ -476,3 +476,91 @@ if (themeToggle) {
 
 applyTheme(localStorage.getItem("judo-theme") || "dark");
 renderSettings();
+
+// --- Bluetooth Controller Initialisierung für Buzzer 1 & 2 ---
+document.addEventListener("DOMContentLoaded", () => {
+  if (!window.TimerBluetooth) return;
+
+  const bluetoothSupport = document.getElementById("bluetoothSupport");
+  const bleMessage = document.getElementById("bleMessage");
+
+  if (bluetoothSupport) {
+    bluetoothSupport.textContent = TimerBluetooth.isSupported() ? "Web Bluetooth supported" : "Not supported";
+  }
+
+  function updateBleMessage() {
+    if (!bleMessage) return;
+    const c1 = TimerBluetooth.isConnected(1);
+    const c2 = TimerBluetooth.isConnected(2);
+    if (c1 && c2) bleMessage.textContent = "Both buzzers connected.";
+    else if (c1 || c2) bleMessage.textContent = "One buzzer connected.";
+    else bleMessage.textContent = "No devices connected.";
+  }
+
+  // Setup für Buzzer 1
+  const connect1 = document.getElementById("connect1");
+  const disconnect1 = document.getElementById("disconnect1");
+  const device1Status = document.getElementById("device1Status");
+  const device1Battery = document.getElementById("device1Battery");
+
+  if (connect1) {
+    connect1.addEventListener("click", async () => {
+      try {
+        device1Status.textContent = "Connecting...";
+        await TimerBluetooth.connect(1);
+      } catch (err) {
+        console.error(err);
+        device1Status.textContent = "Connection failed";
+      }
+    });
+  }
+
+  if (disconnect1) {
+    disconnect1.addEventListener("click", () => TimerBluetooth.disconnect(1));
+  }
+
+  // Setup für Buzzer 2
+  const connect2 = document.getElementById("connect2");
+  const disconnect2 = document.getElementById("disconnect2");
+  const device2Status = document.getElementById("device2Status");
+  const device2Battery = document.getElementById("device2Battery");
+
+  if (connect2) {
+    connect2.addEventListener("click", async () => {
+      try {
+        device2Status.textContent = "Connecting...";
+        await TimerBluetooth.connect(2);
+      } catch (err) {
+        console.error(err);
+        device2Status.textContent = "Connection failed";
+      }
+    });
+  }
+
+  if (disconnect2) {
+    disconnect2.addEventListener("click", () => TimerBluetooth.disconnect(2));
+  }
+
+  // Handler registrieren
+  TimerBluetooth.setHandlers(
+    (index, timestamp) => {
+      // Tastendruck vom Buzzer empfangen -> Löst Aktion aus (GO / Next)
+      toggleTraining();
+    },
+    (index, message, connected) => {
+      const statusEl = index === 1 ? device1Status : device2Status;
+      const connBtn = index === 1 ? connect1 : connect2;
+      const discBtn = index === 1 ? disconnect1 : disconnect2;
+
+      if (statusEl) statusEl.textContent = message;
+      if (statusEl) statusEl.classList.toggle("connected", connected);
+      if (connBtn) connBtn.disabled = connected;
+      if (discBtn) discBtn.disabled = !connected;
+      updateBleMessage();
+    },
+    (index, level) => {
+      const battEl = index === 1 ? device1Battery : device2Battery;
+      if (battEl) battEl.textContent = level !== null ? `${level}% Battery` : "";
+    }
+  );
+});
