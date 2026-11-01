@@ -138,14 +138,17 @@ function renderSettings() {
 
 function showSetupView() {
   stopTimer();
+  document.body.classList.remove("training");
   setupView.classList.remove("hidden");
   trainingView.classList.add("hidden");
   renderSettings();
 }
 
 function showTrainingView() {
+  document.body.classList.add("training");
   setupView.classList.add("hidden");
   trainingView.classList.remove("hidden");
+  trainingView.dataset.mode = currentMode;
 }
 
 function showThrow(name) {
@@ -167,17 +170,12 @@ function startTimed() {
 
   showTrainingView();
   trainingStatus.innerHTML = "";
-  heroTime.innerHTML = "";
-  
-  actionArea.innerHTML = `
-    <div class="training-main-center">
-      <div class="throw-name" style="font-size:clamp(2.5rem, 9vw, 6rem); font-weight:800; line-height:1.1;"></div>
-      <div class="countdown" id="timedCountdown" style="margin-top:16px; font-size:clamp(2rem, 7vw, 4rem); font-variant-numeric:tabular-nums;">${s.remaining}</div>
-    </div>`;
-  
-  const btnRow = trainingView.querySelector(".button-row");
-  btnRow.innerHTML = `<button id="stopButton" class="secondary-button stop-button" data-action="stop" style="width:100%; min-height:70px; font-size:clamp(1.5rem, 6vw, 2.5rem); font-weight:bold; color:#f44336; border-color:#f44336; background:var(--surface-3);">Stop</button>`;
-  
+  heroTime.textContent = formatTime(s.remaining);
+  document.getElementById("secondaryReadout").textContent = "";
+  document.getElementById("winnerReadout").textContent = "";
+  actionArea.innerHTML = `<div class="training-main-center timed-main"><div class="throw-name"></div></div>`;
+  trainingView.querySelector(".button-row").innerHTML = `
+    <button class="action-button stop-button" data-action="stop">STOP</button>`;
   showThrow(s.sequence[s.index]);
   startTimedTimer();
 }
@@ -187,8 +185,7 @@ function startTimedTimer() {
   timerId = setInterval(() => {
     const s = state.timed;
     s.remaining -= 1;
-    const cd = document.getElementById("timedCountdown");
-    if (cd) cd.textContent = s.remaining;
+    heroTime.textContent = formatTime(s.remaining);
 
     if (s.remaining <= 0) {
       if (s.index >= s.sequence.length - 1) {
@@ -234,27 +231,19 @@ function startHighscore() {
 
 function renderHighscoreTraining() {
   const s = state.highscore;
-  // Score links, Zeit rechts
   trainingStatus.innerHTML = `
     <div class="training-header-row">
-      <span>Score: ${s.score}</span>
-      <span>${formatTime(s.remaining)}</span>
+      <span class="score-readout">Score: ${s.score}</span>
+      <span class="time-readout">${formatTime(s.remaining)}</span>
     </div>`;
-  heroTime.innerHTML = "";
-
-  actionArea.innerHTML = `
-    <div class="training-main-center">
-      <div class="throw-name" style="font-size:clamp(2.5rem, 9vw, 6rem); font-weight:800; line-height:1.1;"></div>
-    </div>`;
-
-  const btnRow = trainingView.querySelector(".button-row");
-  btnRow.innerHTML = `
-    <div class="bottom-actions three" style="display:flex; justify-content:center; gap:8px; width:100%;">
-      <button class="large-action stop-button" data-action="stop" style="flex:1; min-height:65px; font-size:clamp(1.2rem, 4vw, 2rem); font-weight:bold; color:#f44336; border-color:#f44336; background:var(--surface-3);">Stop</button>
-      <button class="large-action" data-action="skip" style="flex:1; min-height:65px; font-size:clamp(1.2rem, 4vw, 2rem); font-weight:bold; color:#ffeb3b; border-color:#ffeb3b; background:var(--surface-2);">Skip</button>
-      <button class="large-action" data-action="next" style="flex:1; min-height:65px; font-size:clamp(1.2rem, 4vw, 2rem); font-weight:bold; color:#4caf50; border-color:#4caf50; background:var(--surface-2);">Next</button>
-    </div>`;
-
+  heroTime.textContent = "";
+  document.getElementById("secondaryReadout").textContent = "";
+  document.getElementById("winnerReadout").textContent = "";
+  actionArea.innerHTML = `<div class="training-main-center highscore-main"><div class="throw-name"></div></div>`;
+  trainingView.querySelector(".button-row").innerHTML = `
+    <button class="action-button stop-button" data-action="stop">STOP</button>
+    <button class="action-button secondary-action" data-action="skip">SKIP</button>
+    <button class="action-button secondary-action" data-action="next">NEXT</button>`;
   showThrow(s.sequence[s.index]);
 }
 
@@ -279,7 +268,7 @@ function finishHighscore() {
       <div class="result-label" style="color:var(--muted); font-size:clamp(1.2rem, 4vw, 2rem);">Gesamtscore</div>
       <div class="result-score" style="font-size:clamp(4rem, 15vw, 10rem); font-weight:900; line-height:1;">${state.highscore.score}</div>
     </div>`;
-  trainingView.querySelector(".button-row").innerHTML = `<button class="reset-button" data-action="reset" style="width:100%; min-height:70px; font-size:clamp(1.5rem, 6vw, 2.5rem); font-weight:bold;">Reset</button>`;
+  trainingView.querySelector(".button-row").innerHTML = `<button class="action-button" data-action="reset">RESET</button>`;
 }
 
 // --- Modus 3: Würfe in Situationen ---
@@ -307,20 +296,20 @@ function randomSituation() {
 function renderSituationTraining() {
   const s = state.situations;
   const throws = situationThrows(s);
-
-  trainingStatus.innerHTML = s.situation ? `<div style="text-align:center; font-size:clamp(1.3rem, 4vw, 2.2rem); color:var(--muted); text-transform:uppercase; width:100%;">${randomSituation()}</div>` : "";
-  heroTime.innerHTML = "";
-
+  trainingStatus.innerHTML = s.situation
+    ? `<div class="situation-label">${randomSituation()}</div>`
+    : "";
+  heroTime.textContent = formatTime(s.remaining);
+  document.getElementById("secondaryReadout").textContent = "";
+  document.getElementById("winnerReadout").textContent = "";
   actionArea.innerHTML = `
-    <div class="training-main-center">
-      <div class="throw-grid count-${s.count}" style="width:100%; display:grid; gap:8px; grid-template-columns: repeat(${s.count > 3 ? 2 : (s.count === 3 ? 3 : s.count)}, 1fr);">
-        ${throws.map(name => `<div class="throw-card" style="min-height:90px; display:flex; align-items:center; justify-content:center; text-align:center; padding:10px; border:2px solid var(--border); border-radius:10px; background:var(--surface); font-size:clamp(1.2rem, 4vw, 2.5rem); font-weight:bold;">${name}</div>`).join("")}
+    <div class="training-main-center situations-main">
+      <div class="throw-grid count-${s.count}">
+        ${throws.map(name => `<div class="throw-card">${name}</div>`).join("")}
       </div>
-      <div class="countdown" style="margin-top:16px; font-size:clamp(2rem, 7vw, 4rem); font-variant-numeric:tabular-nums;">${formatTime(s.remaining)}</div>
     </div>`;
-
-  const btnRow = trainingView.querySelector(".button-row");
-  btnRow.innerHTML = `<button id="stopButton" class="secondary-button stop-button" data-action="stop" style="width:100%; min-height:70px; font-size:clamp(1.5rem, 6vw, 2.5rem); font-weight:bold; color:#f44336; border-color:#f44336; background:var(--surface-3);">Stop</button>`;
+  trainingView.querySelector(".button-row").innerHTML = `
+    <button class="action-button stop-button" data-action="stop">STOP</button>`;
 }
 
 function startSituationTimer() {
@@ -328,8 +317,7 @@ function startSituationTimer() {
   timerId = setInterval(() => {
     const s = state.situations;
     s.remaining -= 1;
-    const cd = actionArea.querySelector(".countdown");
-    if (cd) cd.textContent = formatTime(s.remaining);
+    heroTime.textContent = formatTime(s.remaining);
 
     if (s.remaining <= 0) {
       s.index += 1;
@@ -368,30 +356,25 @@ function startSituationHighscore() {
 function renderSituationHighscoreTraining() {
   const s = state.situationHighscore;
   const throws = situationThrows(s);
-
-  // Score links, Zeit rechts, darunter Situation
   trainingStatus.innerHTML = `
     <div class="training-header-row">
-      <span>Score: ${s.score}</span>
-      <span>${formatTime(s.remaining)}</span>
+      <span class="score-readout">Score: ${s.score}</span>
+      <span class="time-readout">${formatTime(s.remaining)}</span>
     </div>
-    ${s.situation ? `<div style="text-align:center; font-size:clamp(1.3rem, 4vw, 2.2rem); color:var(--muted); text-transform:uppercase; width:100%; margin-top:4px;">${randomSituation()}</div>` : ""}`;
-  heroTime.innerHTML = "";
-
+    ${s.situation ? `<div class="situation-label">${randomSituation()}</div>` : ""}`;
+  heroTime.textContent = "";
+  document.getElementById("secondaryReadout").textContent = "";
+  document.getElementById("winnerReadout").textContent = "";
   actionArea.innerHTML = `
-    <div class="training-main-center">
-      <div class="throw-grid count-${s.count}" style="width:100%; display:grid; gap:8px; grid-template-columns: repeat(${s.count > 3 ? 2 : (s.count === 3 ? 3 : s.count)}, 1fr);">
-        ${throws.map(name => `<div class="throw-card" style="min-height:90px; display:flex; align-items:center; justify-content:center; text-align:center; padding:10px; border:2px solid var(--border); border-radius:10px; background:var(--surface); font-size:clamp(1.2rem, 4vw, 2.5rem); font-weight:bold;">${name}</div>`).join("")}
+    <div class="training-main-center situation-highscore-main">
+      <div class="throw-grid count-${s.count}">
+        ${throws.map(name => `<div class="throw-card">${name}</div>`).join("")}
       </div>
     </div>`;
-
-  const btnRow = trainingView.querySelector(".button-row");
-  btnRow.innerHTML = `
-    <div class="bottom-actions three" style="display:flex; justify-content:center; gap:8px; width:100%;">
-      <button class="large-action stop-button" data-action="stop" style="flex:1; min-height:65px; font-size:clamp(1.2rem, 4vw, 2rem); font-weight:bold; color:#f44336; border-color:#f44336; background:var(--surface-3);">Stop</button>
-      <button class="large-action" data-action="skip" style="flex:1; min-height:65px; font-size:clamp(1.2rem, 4vw, 2rem); font-weight:bold; color:#ffeb3b; border-color:#ffeb3b; background:var(--surface-2);">Skip</button>
-      <button class="large-action" data-action="next" style="flex:1; min-height:65px; font-size:clamp(1.2rem, 4vw, 2rem); font-weight:bold; color:#4caf50; border-color:#4caf50; background:var(--surface-2);">Next</button>
-    </div>`;
+  trainingView.querySelector(".button-row").innerHTML = `
+    <button class="action-button stop-button" data-action="stop">STOP</button>
+    <button class="action-button secondary-action" data-action="skip">SKIP</button>
+    <button class="action-button secondary-action" data-action="next">NEXT</button>`;
 }
 
 function startSituationHighscoreTimer() {
@@ -412,7 +395,7 @@ function startSituationHighscoreTimer() {
           <div class="result-label" style="color:var(--muted); font-size:clamp(1.2rem, 4vw, 2rem);">Gesamtscore</div>
           <div class="result-score" style="font-size:clamp(4rem, 15vw, 10rem); font-weight:900; line-height:1;">${s.score}</div>
         </div>`;
-      trainingView.querySelector(".button-row").innerHTML = `<button class="reset-button" data-action="reset" style="width:100%; min-height:70px; font-size:clamp(1.5rem, 6vw, 2.5rem); font-weight:bold;">Reset</button>`;
+      trainingView.querySelector(".button-row").innerHTML = `<button class="action-button" data-action="reset">RESET</button>`;
     }
   }, 1000);
 }

@@ -105,3 +105,206 @@ body.training #backToSetup{position:fixed;right:12px;top:8px;font-size:11px;opac
   width: 100%;
   margin-bottom: 12px; /* Schafft den gewünschten Abstand zum unteren Bildschirmrand */
 }
+
+/* Trainingsansicht: modusspezifische Anordnung mit einheitlicher Aktionsleiste */
+body.training #trainingView {
+  min-height: 100dvh;
+  height: 100dvh;
+  padding: calc(env(safe-area-inset-top) + 12px) 14px calc(env(safe-area-inset-bottom) + 14px);
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: 0;
+  overflow: hidden;
+}
+body.training #trainingView > .training-status { order: 1; width: 100%; flex: 0 0 auto; }
+body.training #trainingView > .hero-time { order: 2; flex: 0 0 auto; }
+body.training #trainingView > #secondaryReadout,
+body.training #trainingView > #winnerReadout { display: none; }
+body.training #trainingView > #actionArea { order: 3; flex: 1 1 auto; min-height: 0; width: 100%; margin: 0; }
+body.training #trainingView > #resultStats { order: 4; }
+body.training #trainingView > .button-row {
+  order: 5;
+  flex: 0 0 auto;
+  display: flex;
+  width: 100%;
+  gap: 8px;
+  margin: 12px 0 0 !important;
+  padding: 0;
+}
+body.training #trainingView .action-button {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 64px;
+  padding: 12px 8px;
+  font-size: clamp(1rem, 4.5vw, 1.45rem);
+  line-height: 1.1;
+  border-radius: 9px;
+  letter-spacing: .03em;
+}
+body.training #trainingView .action-button.stop-button {
+  background: #292929;
+  color: var(--text);
+  border: 2px solid #777;
+}
+body.training #trainingView .action-button.secondary-action {
+  background: #292929;
+  color: var(--text);
+  border: 1px solid #666;
+}
+body.training #trainingView .training-status { color: var(--text); text-align: center; }
+body.training #trainingView .training-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 0 2px;
+  font-size: clamp(1.1rem, 4.5vw, 2rem);
+  line-height: 1.2;
+}
+body.training #trainingView .score-readout { text-align: left; }
+body.training #trainingView .time-readout { text-align: right; font-variant-numeric: tabular-nums; }
+body.training #trainingView .hero-time {
+  font-size: clamp(3.2rem, 15vw, 6rem);
+  line-height: 1;
+  letter-spacing: -.04em;
+  text-align: center;
+  margin: 0 0 12px;
+}
+body.training #trainingView .training-main-center {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+body.training #trainingView .throw-name {
+  font-size: clamp(2.1rem, 8vw, 5rem) !important;
+  line-height: 1.12 !important;
+  font-weight: 800;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+body.training #trainingView .throw-grid {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  gap: 8px;
+  align-content: center;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+body.training #trainingView .throw-card {
+  min-height: 0 !important;
+  padding: 8px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow-wrap: anywhere;
+  border: 1px solid var(--line) !important;
+  border-radius: 9px !important;
+  background: var(--panel) !important;
+  font-size: clamp(1rem, 3.8vw, 2rem) !important;
+  line-height: 1.15;
+}
+body.training #trainingView .throw-grid.count-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+body.training #trainingView .throw-grid.count-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+body.training #trainingView .throw-grid.count-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); }
+body.training #trainingView .throw-grid.count-5 { grid-template-columns: repeat(6, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); }
+body.training #trainingView .throw-grid.count-5 .throw-card { grid-column: span 2; }
+body.training #trainingView .throw-grid.count-5 .throw-card:nth-child(4) { grid-column: 2 / span 2; }
+body.training #trainingView .throw-grid.count-5 .throw-card:nth-child(5) { grid-column: 4 / span 2; }
+body.training #trainingView .situation-label {
+  width: 100%;
+  margin: 8px 0 0;
+  color: var(--muted);
+  text-align: center;
+  text-transform: uppercase;
+  font-size: clamp(1.1rem, 4vw, 1.8rem);
+  line-height: 1.2;
+}
+/* Modus 1: Zeit oben mittig, danach Wurf */
+body.training #trainingView[data-mode="timed"] > .hero-time { order: 1; margin: 0 0 12px; }
+body.training #trainingView[data-mode="timed"] > .training-status { order: 0; }
+body.training #trainingView[data-mode="timed"] > #actionArea { order: 2; }
+body.training #trainingView[data-mode="timed"] .timed-main { justify-content: flex-start; padding-top: 4px; }
+/* Modus 2: Score/Zeit oben, Wurf darunter */
+body.training #trainingView[data-mode="highscore"] > .training-status { order: 1; }
+body.training #trainingView[data-mode="highscore"] > #actionArea { order: 2; }
+body.training #trainingView[data-mode="highscore"] .highscore-main { justify-content: flex-start; padding-top: clamp(28px, 9vh, 90px); }
+/* Modus 3: Zeit ganz oben, Situation direkt darunter, anschließend Würfe */
+body.training #trainingView[data-mode="situations"] > .hero-time { order: 1; margin-bottom: 8px; }
+body.training #trainingView[data-mode="situations"] > .training-status { order: 2; }
+body.training #trainingView[data-mode="situations"] > #actionArea { order: 3; }
+body.training #trainingView[data-mode="situations"] .situation-label { margin: 0 0 8px; }
+body.training #trainingView[data-mode="situations"] .situations-main { justify-content: flex-start; }
+/* Modus 4: Score/Zeit, Situation, gleich große Wurfboxen; Aktionsleiste unten */
+body.training #trainingView[data-mode="situationHighscore"] > .training-status { order: 1; }
+body.training #trainingView[data-mode="situationHighscore"] > #actionArea { order: 2; }
+body.training #trainingView[data-mode="situationHighscore"] .situation-label { margin-top: 8px; }
+body.training #trainingView[data-mode="situationHighscore"] .situation-highscore-main { justify-content: center; }
+
+@media (max-width: 420px) {
+  body.training #trainingView { padding-left: 10px; padding-right: 10px; }
+  body.training #trainingView .throw-grid { gap: 6px; }
+  body.training #trainingView .throw-card { font-size: clamp(.9rem, 3.5vw, 1.35rem) !important; padding: 5px !important; }
+  body.training #trainingView .action-button { min-height: 58px; font-size: clamp(.9rem, 4vw, 1.1rem); }
+}
+body.training #trainingView > .hero-time:empty { display: none; }
+body.training #trainingView > .training-status:empty { display: none; }
+
+/* Layout-Feinschliff: Wurfkarten mit konstanter, smartphone-tauglicher Höhe */
+body.training #trainingView .throw-grid {
+  height: auto;
+  flex: 0 0 auto;
+  align-content: start;
+  grid-auto-rows: clamp(88px, 13vh, 116px);
+  gap: 8px;
+}
+body.training #trainingView .throw-card {
+  min-height: clamp(88px, 13vh, 116px) !important;
+  height: clamp(88px, 13vh, 116px);
+  font-size: clamp(1rem, 3.6vw, 1.5rem) !important;
+  padding: 10px !important;
+}
+/* Modus 1 und 2: einzelner Wurf erhält denselben Kartencharakter */
+body.training #trainingView .throw-name {
+  width: min(100%, 760px);
+  min-height: clamp(112px, 17vh, 150px);
+  padding: 20px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+  overflow-wrap: anywhere;
+}
+/* Farbige Aktionsrahmen wie in der vorherigen Version */
+body.training #trainingView .action-button[data-action="stop"] {
+  border: 2px solid #d94a4a !important;
+}
+body.training #trainingView .action-button[data-action="skip"] {
+  border: 2px solid #e0b83f !important;
+}
+body.training #trainingView .action-button[data-action="next"] {
+  border: 2px solid #43ad68 !important;
+}
+@media (max-width: 420px) {
+  body.training #trainingView .throw-grid { gap: 7px; }
+  body.training #trainingView .throw-card {
+    min-height: clamp(88px, 12vh, 108px) !important;
+    height: clamp(88px, 12vh, 108px);
+    font-size: clamp(.95rem, 3.8vw, 1.2rem) !important;
+    padding: 7px !important;
+  }
+  body.training #trainingView .throw-name {
+    min-height: 112px;
+    padding: 16px 12px;
+    font-size: clamp(1.6rem, 7vw, 2.5rem) !important;
+  }
+}
